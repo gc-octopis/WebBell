@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <title>網頁鐘聲</title>
+</head>
+
+<body>
+    <div class="title">
+        網頁<span>鐘聲</span>
+        <p class="subtitle">
+            學校鐘聲太小聲？在家裡也想體驗校園生活？快來使用！
+        </p>
+    </div>
+
+    <button id="button" onclick="start()">立即開始</button>
+
+    <!-- the following are the tabs that'll show up after pressing the button. -->
+    <div class="tabsContainer">
+        <div class="tabSelector">
+            <button>時鐘</button>
+            <button>設定</button>
+            <button>關於</button>
+        </div>
+        <div class="tab">
+            <div class="time">
+                <div id="time">
+                    <div id="time-day"></div>
+                    <div id="time-time"></div>
+                </div>
+                <div class="info">
+                    <div id="last"></div>
+                    <div id="next"></div>
+                </div>
+                <div id="progressBar">
+                    <div id="progressFill" class="HSV"></div>
+                </div>
+                <div class="next-class" id="next-class">
+                    <span id="current-class" class="next-class-item"></span>
+                    <span>➡</span>
+                    <span id="next-class-1" class="next-class-item"></span>
+                    <span>➡➡</span>
+                    <span id="next-class-2" class="next-class-item"></span>
+                </div>
+            </div>
+            <select name="timeSets" id="timeSets">
+                <!--<option>國中部</option>
+                <option>1113</option>
+                <option>1102</option>
+                <option>1093</option>
+                <option>高一A</option>-->
+                <option>高中部.json</option>
+                <option>empty.json</option>
+                <option>高二A.json</option>
+            </select>
+        </div>
+        <div class="tab">
+            <div class="setting">
+                <div class="setAudio">
+                    <span>選擇音檔：</span>
+                    <input id="ain" type="file" accept="audio/mp3, audio/wav" />
+                    <br />
+                    <span id="showAudioStartPoint">起始時間：0</span>
+                    <input type="range" id="audioStartPoint" step="0.1">
+                    <br />
+                    <span id="audioLength">鐘響時長：0</span>
+                    <input type="range" id="audioLengthSet" step="0.1" min="5" max="30" value="10">
+                    <br />
+                    <span id="audioVolume">音量大小：0</span>
+                    <input type="range" id="audioVolumeSet" step="0.1" min="0" max="100" value="80">
+                    <br />
+                    <label for="fade-in"><input type="checkbox" id="fade-in" >淡入</label>
+                    <label for="fade-out"><input type="checkbox" id="fade-out" >淡出</label>
+                    <div id="zoomview-container"></div>
+                    <div id="overview-container"></div>
+                </div>
+
+                <!-- <div class="setStyle">
+                    <span>背景</span>
+                    #<input type="text" id="colorCode" onchange="document.body.style.backgroundColor = '#' + id('colorCode').value;">
+
+                </div>
+                <div class="setTime">
+                    <div>
+                        <p>設定/編輯鐘響時間</p>
+                        <div class="timeSetBar">
+                            <div class="timeSetsEdit">
+                                <input type="text" id="setName" onchange="timeSetsOnchange()" onfocus="this.select()">
+                                <div class="up" onclick="up()">▲</div>
+                                <div class="down" onclick="down()">▼</div>
+                            </div>
+                            <button id="timeSetAdd" onclick="document.getElementById('editor').showModal()">新增</button>
+                            <button id="timeSetSave" onclick="timeSetSave()">儲存</button>
+                            <button id="timeSetSaveAs" onclick="timeSetSaveAs()">另存</button>
+                            < button id="timeSetDel" onclick="timeSetDel()">刪除</button>
+                        </div>
+                    </div>
+                    <div class="oneTime">
+                        <p>第 1 次鐘響</p>
+                        <input id="timeCode">
+                        <button id="rm-btn" onclick="removeTime()">×</button>
+                        <button id="add-btn"onclick="addTime()">+</button>
+                    </div>
+                    <dialog id="editor" class="dialog">
+                        <table id="subject-list" class="table">
+                            <tr>
+                                <td class="top-left-row">星期</td>
+                                <td class="top-row">一</td>
+                                <td class="top-row">二</td>
+                                <td class="top-row">三</td>
+                                <td class="top-row">四</td>
+                                <td class="top-row">五</td>
+                                <td class="top-row">六</td>
+                                <td class="top-row">日</td>
+                            </tr>
+                        </table>
+                        <button onclick="document.getElementById('editor').close()">close</button>
+                    </dialog>
+                </div> -->
+            </div>
+        </div>
+        <div class="tab">
+            <div class="about">
+                <h1 id="about-title" class="about-title">關於</h1>
+                <p>發生錯誤請向以下 E-mail 回報：</p>
+                <p>11035013@fhehs.tp.edu.tw</p>
+            </div>
+        </div>
+    </div>
+    <div class="credit">迴紋針📎先生製作·2022~2023</div>
+
+</body>
+<!-- <script src="node_modules\timepoint-selection\dist\js\timepoint-selection.var.js"></script> -->
+<script src="https://unpkg.com/peaks.js/dist/peaks.js"></script>
+<script src="js/func.js"></script>
+<script src="js/index.js"></script>
+<script src="js/easterEgg.js"></script>
+<script src="js/tabs.js"></script>
+<script src="js/timeSet.js"></script>
+<script src="js/audio.js"></script>
+<!-- <script src="js/editor.js"></script> -->
+<script> function start() {
+        let button = document.getElementById("button");
+        button.remove();
+        document.querySelector(".tabsContainer").style.display = "block";
+        document.querySelector(".title").classList.add("title-new");
+        document.querySelector(".subtitle").classList.add("subtitle-new");
+        main();
+}
+</script>
+
+</html>
