@@ -15,10 +15,14 @@ const AudioPlayer = {
 
     loadAudio() {
         let file = id("ain").files;
+        let path = get("audioPath");
 
         if (file.length != 0) {
             let link = URL.createObjectURL(file[0]);
             this.audio.src = link;
+            set("audioPath", file[0].path);
+        } else if (path !== null) {
+            this.audio.src = path;
         } else {
             this.audio.src = "ring.mp3";
         }

@@ -9,7 +9,6 @@ body{
 
 .tabsContainer{
     margin-top: 30px;
-    display: none;
 }
 
 .tabSelector{
@@ -38,28 +37,6 @@ body{
 
 .title{
     font-size: 40px; 
-    padding: 20px; 
-    margin-top: 30px; 
-    background-color: rgba(0,0,0,0.5); 
-    color: #8787a0;
-    text-align: left; 
-    width: fit-content;
-    margin-left: auto;
-    margin-right: auto;
-    border-radius: 20px; 
-    font-family: 'Noto Sans TC', sans-serif; 
-    font-weight: 700;
-    transition: all 0.3s ease;
-}
-.subtitle{
-    font-size: 15px; 
-    font-weight: 100;
-    margin: 0;
-    transition: all 0.3s ease;
-}
-
-.title-new{
-    font-size: 40px; 
     padding: 10px 20px; 
     margin-top: 0; 
     background-color: #000000; 
@@ -79,30 +56,10 @@ body{
     left: 0;
     z-index: 10000;
 }
-.subtitle-new{
+.subtitle{
     font-size: 15px; 
     font-weight: 100;
     margin: 10px;
-}
-
-#button{
-    border: 5px solid rgba(0,0,0,0.5); 
-    background-color: #8787a0; 
-    margin-left: auto; 
-    margin-right: auto;  
-    margin: 50px;
-    padding: 20px; 
-    border-radius: 10px; 
-    font-size: 30px; 
-    font-weight: 500;
-    scale: 100%;
-    transition: all 0.3s ease;
-}
-#button:hover{
-    border: 7px solid rgba(0,0,0,0.5); 
-    background-color: #6a6a90; 
-    font-weight: 700;
-    scale: 105%;
 }
 
 .time{
@@ -198,6 +155,15 @@ body{
 .next-class-item {
     font-size: 1.2em;
     opacity: 100%;
+}
+
+.class-list {
+    color: #8787a0;
+    font-weight: 500;
+    font-size: 1.5em;
+    text-align: left;
+    margin-left: auto;
+    margin-right: auto;
 }
 
 .setting, .about{
@@ -326,6 +292,11 @@ body{
     color: #6a6a90;
 }
 
+.error-log {
+    font-size: 0.75em;
+    color: #ff5050;
+}
+
 .table {
     text-align: center;
 }
@@ -334,6 +305,7 @@ body{
     background-color: #ccaa00;
     border-radius: 3px;
     padding: 2px;
+    text-align: center;
 }
 
 .class {
@@ -401,6 +373,55 @@ body{
         transform: translateX(0%);
     }
 }
+
+#editor-week {
+    display: flex;
+    align-items: start;
+}
+
+.editor-day {
+    margin: 5px;
+    padding: 3px;
+    display: flex;
+    flex-direction: column;
+    border: 2px solid black;
+    border-radius: 3px;
+}
+
+.cell {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    padding: 3px 5px;
+    justify-content: center;
+}
+
+.cell:nth-child(odd) {
+    background-color: #fa7878a0;
+}
+
+.cell:nth-child(even) {
+    background-color: #7878faa0;
+}
+
+.cell-remove {
+    width: 1em;
+    height: 1em;
+    text-align: center;
+    padding: 0;
+    background-color: #ffa0a0;
+    position: absolute;
+    top: 0;
+    right: 0;
+    z-index: 5;
+}
+
+.cell-time, .cell-subject {
+    opacity: 70%;
+    width: 5em;
+}
+
+
 
 
 

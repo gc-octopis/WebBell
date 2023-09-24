@@ -1,6 +1,12 @@
-// Current edit time set Variables
-// let timeSetsEditIndex = 0;
-// let timeSetsEditItems = Object.keys(JSON.parse(get("timeSets")));
+/*
+TODO:
+
+(1)如果輸入的檔案名稱跟已經有的 time set 一樣，就要確認是不是要另存。
+(2)改一個 time set 的名字時，需要動兩個 select 裡面的名字，兩個 object 裡面的名字，local 的名字。
+
+*/
+
+
 
 
 async function main() {
@@ -9,19 +15,6 @@ async function main() {
     loadEasterEgg();
     AudioPlayer.init();
 
-
-    // let input = qs(".oneTime input");
-
-    // selection(input, {
-    //     'durationFormat': 'hh:mm:ss',
-    //     'max': 3600 * 24
-    // });
-
-    // input.addEventListener("keyup", inputHotkeys);
-
-    // timeSetsEditUpdate();
-    currentSet = get("currentSet");
-    currentSet ? id("timeSets").value = currentSet : id("timeSets").selectedIndex = 0;
 
     // this makes a dialog to prevent accidently closing the tab
     // also makes user unable to close the electron window
@@ -38,17 +31,36 @@ async function main() {
     let week = ["日", "一", "二", "三", "四", "五", "六"];
     let weekEn = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 
+    let change = document.createEvent('Event');
+    change.initEvent('change', true, false);
+
     let timeSets = {};
     let times = {}, timesInSec = {}, subjects = {};
-
-    timeSets["高二A.json"] = new TimeSet();
-    await timeSets["高二A.json"].fromFile("高二A.json");
 
     timeSets["empty.json"] = new TimeSet();
     await timeSets["empty.json"].fromFile("empty.json");
 
-    timeSets["高中部.json"] = new TimeSet();
-    await timeSets["高中部.json"].fromFile("高中部.json");
+    let keys = Object.keys(JSON.parse(get('timeSets')));
+
+    for (let set of keys) {
+        timeSets[set] = new TimeSet();
+        await timeSets[set].fromLocal(set);
+        timeSets[set].addOption();
+    }
+
+    id('timeSetImport').onchange = async () => {
+        let file = id('timeSetImport').files[0];
+        let path = URL.createObjectURL(file);
+        let name = file.name;
+        timeSets[name] = new TimeSet();
+        await timeSets[name].fromFile(path, name);
+        timeSets[name].addOption();
+    }
+
+    // for setup timeSets select 
+
+    let currentSet = get("currentSet");
+    timeSets[currentSet] ? id("timeSets").value = currentSet : id("timeSets").selectedIndex = 0;
 
     timeSets[id("timeSets").value].load(times, timesInSec, subjects);
 
@@ -56,6 +68,89 @@ async function main() {
         set("currentSet", event.target.value); // Save the last time set user stayed in. When next time open (this app) , target to it.
         timeSets[event.target.value].load(times, timesInSec, subjects); // load new set to the bell
     };
+
+    // for setup editor select
+
+    let currentEditor = get("currentEditor");
+    timeSets[currentEditor] ? id('editor-select').value = currentEditor : set('currentEditor', id('editor-select').value);
+
+    timeSets[id("editor-select").value].editor.active();
+
+    id("editor-select").onchange = () => {
+        timeSets[get('currentEditor')].editor.clear();
+        set("currentEditor", event.target.value);
+        timeSets[event.target.value].editor.active(); // load new editor to the editor
+    };
+
+    id('editor-save-btn').onclick = () => timeSets[get('currentEditor')].saveToLocal(this.name, this.set);
+    id('editor-export-btn').onclick = () => {
+        const jsonBlob = new Blob([JSON.stringify(timeSets[get('currentEditor')].editor.json)], { type: 'application/json' });
+        const a = document.createElement('a');
+        const name = id('editor-name-input').value;
+        a.href = URL.createObjectURL(jsonBlob);
+        a.download = name + '.json'; // Specify the file name
+        a.style.display = 'none';
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+    };
+
+    id('editor-add-btn').onclick = () => {
+        let name = `new-${parseInt(new Date().getTime())}.json`;
+        timeSets[name] = new TimeSet(name);
+        timeSets[name].addOption();
+        timeSets[name].saveToLocal();
+        id('editor-select').value = name;
+        id("editor-select").dispatchEvent(change);
+    };
+
+    id('editor-delete-btn').onclick = () => {
+        if (confirm("你確定要刪除這組時間？")) {
+            let target = id('editor-select').value;
+            timeSets[target].delete();
+            id("timeSets").dispatchEvent(change);
+            id("editor-select").dispatchEvent(change);
+            delete timeSets[target];
+        }
+    }
+
+    id('editor-name-input').onchange = () => {
+        let input = id('editor-name-input');
+        let log = id('editor-name-log');
+        let oldName = id('editor-select').value;
+        let newName = input.value + '.json';
+        log.innerText = "";
+        if (newName !== oldName) {
+            let local = JSON.parse(get('timeSets'));
+            for (let name of Object.keys(local)) {
+                if (newName === name) {
+                    log.innerText = "這個名字已經存在，請換一個";
+                    return;
+                }
+            }
+            Object.defineProperty(timeSets, newName,
+                Object.getOwnPropertyDescriptor(timeSets, oldName));
+            delete timeSets[oldName];
+            timeSets[newName].name = newName;
+            timeSets[newName].editor.name = newName;
+            Object.defineProperty(local, newName,
+                Object.getOwnPropertyDescriptor(local, oldName));
+            delete local[oldName];
+            set("timeSets", JSON.stringify(local));
+            qsAll('#timeSets option').forEach(option => {
+                if (option.innerText === oldName) {
+                    option.innerText = newName;
+                }
+            });
+            qsAll('#editor-select option').forEach(option => {
+                if (option.innerText === oldName) {
+                    option.innerText = newName;
+                }
+            });
+            id("timeSets").dispatchEvent(change);
+            set('currentEditor', newName);
+        }
+    }
 
     function loop() {
 
@@ -112,6 +207,18 @@ async function main() {
         id("time-time").innerHTML = `${hour}:${min}:${sec}`;
         id("last").innerHTML = `${lastHour}:${lastMin}:${lastSec}`;
         id("next").innerHTML = `${nextHour}:${nextMin}:${nextSec}`;
+
+        let table = qs('.class-list');
+        table.innerHTML = "";
+
+        for (let i = 0; i < timesToday.length - 1; i++) {
+            let tr = document.createElement('tr');
+            tr.innerHTML = `<td>${zero(timesToday[i][0])}:${zero(timesToday[i][1])}:${zero(timesToday[i][2])
+                }~${zero(timesToday[i + 1][0])}:${zero(timesToday[i + 1][1])}:${zero(timesToday[i + 1][2])
+                }</td>
+            <td>${subjects[weekEn[day]][i]}</td>`;
+            table.appendChild(tr);
+        }
 
         setTimeout(loop, 1);
         return;

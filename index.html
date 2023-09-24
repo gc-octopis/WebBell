@@ -16,8 +16,6 @@
         </p>
     </div>
 
-    <button id="button" onclick="start()">立即開始</button>
-
     <!-- the following are the tabs that'll show up after pressing the button. -->
     <div class="tabsContainer">
         <div class="tabSelector">
@@ -47,15 +45,8 @@
                 </div>
             </div>
             <select name="timeSets" id="timeSets">
-                <!--<option>國中部</option>
-                <option>1113</option>
-                <option>1102</option>
-                <option>1093</option>
-                <option>高一A</option>-->
-                <option>高中部.json</option>
-                <option>empty.json</option>
-                <option>高二A.json</option>
             </select>
+            <table class="class-list"></table>
         </div>
         <div class="tab">
             <div class="setting">
@@ -78,7 +69,7 @@
                     <div id="overview-container"></div>
                 </div>
 
-                <!-- <div class="setStyle">
+                <div class="setStyle">
                     <span>背景</span>
                     #<input type="text" id="colorCode" onchange="document.body.style.backgroundColor = '#' + id('colorCode').value;">
 
@@ -86,40 +77,31 @@
                 <div class="setTime">
                     <div>
                         <p>設定/編輯鐘響時間</p>
-                        <div class="timeSetBar">
-                            <div class="timeSetsEdit">
-                                <input type="text" id="setName" onchange="timeSetsOnchange()" onfocus="this.select()">
-                                <div class="up" onclick="up()">▲</div>
-                                <div class="down" onclick="down()">▼</div>
-                            </div>
-                            <button id="timeSetAdd" onclick="document.getElementById('editor').showModal()">新增</button>
-                            <button id="timeSetSave" onclick="timeSetSave()">儲存</button>
-                            <button id="timeSetSaveAs" onclick="timeSetSaveAs()">另存</button>
-                            < button id="timeSetDel" onclick="timeSetDel()">刪除</button>
-                        </div>
-                    </div>
-                    <div class="oneTime">
-                        <p>第 1 次鐘響</p>
-                        <input id="timeCode">
-                        <button id="rm-btn" onclick="removeTime()">×</button>
-                        <button id="add-btn"onclick="addTime()">+</button>
+                        <button id="timeSetAdd" onclick="document.getElementById('editor').showModal()">編輯</button>
+                        <br>
+                        匯入JSON: <input id="timeSetImport" type="file">
                     </div>
                     <dialog id="editor" class="dialog">
-                        <table id="subject-list" class="table">
-                            <tr>
-                                <td class="top-left-row">星期</td>
-                                <td class="top-row">一</td>
-                                <td class="top-row">二</td>
-                                <td class="top-row">三</td>
-                                <td class="top-row">四</td>
-                                <td class="top-row">五</td>
-                                <td class="top-row">六</td>
-                                <td class="top-row">日</td>
-                            </tr>
-                        </table>
-                        <button onclick="document.getElementById('editor').close()">close</button>
+                        <button id="rm-btn" onclick="document.getElementById('editor').close()">X</button>
+                        <br>
+                        <input type="text" id="editor-name-input">.json  <span class="error-log" id="editor-name-log"></span>
+                        <br>
+                        <select name="editor" id="editor-select"></select>
+                        <button id="editor-add-btn">新增一組</button>
+                        <button id="editor-delete-btn">刪除本組</button>
+                        <div id="editor-week">
+                            <div class="editor-day" id="mon"><div class="top-row">星期一</div><button class="add-cell">+</button></div>
+                            <div class="editor-day" id="tue"><div class="top-row">星期二</div><button class="add-cell">+</button></div>
+                            <div class="editor-day" id="wed"><div class="top-row">星期三</div><button class="add-cell">+</button></div>
+                            <div class="editor-day" id="thu"><div class="top-row">星期四</div><button class="add-cell">+</button></div>
+                            <div class="editor-day" id="fri"><div class="top-row">星期五</div><button class="add-cell">+</button></div>
+                            <div class="editor-day" id="sat"><div class="top-row">星期六</div><button class="add-cell">+</button></div>
+                            <div class="editor-day" id="sun"><div class="top-row">星期日</div><button class="add-cell">+</button></div>
+                        </div>
+                        <button id="editor-save-btn">Save</button>
+                        <button id="editor-export-btn">Export To JSON File</button>
                     </dialog>
-                </div> -->
+                </div>
             </div>
         </div>
         <div class="tab">
@@ -133,7 +115,7 @@
     <div class="credit">迴紋針📎先生製作·2022~2023</div>
 
 </body>
-<!-- <script src="node_modules\timepoint-selection\dist\js\timepoint-selection.var.js"></script> -->
+<script src="node_modules\timepoint-selection\dist\js\timepoint-selection.var.js"></script>
 <script src="https://unpkg.com/peaks.js/dist/peaks.js"></script>
 <script src="js/func.js"></script>
 <script src="js/index.js"></script>
@@ -142,14 +124,7 @@
 <script src="js/timeSet.js"></script>
 <script src="js/audio.js"></script>
 <!-- <script src="js/editor.js"></script> -->
-<script> function start() {
-        let button = document.getElementById("button");
-        button.remove();
-        document.querySelector(".tabsContainer").style.display = "block";
-        document.querySelector(".title").classList.add("title-new");
-        document.querySelector(".subtitle").classList.add("subtitle-new");
-        main();
-}
-</script>
+<script src="js/newEditor.js"></script>
+<script> window.onload = main;</script>
 
 </html>
