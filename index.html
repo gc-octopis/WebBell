@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <title>網頁鐘聲</title>
+</head>
+
+<body>
+    <div class="title" id="title">
+        網頁<span>鐘聲</span>
+        <p class="subtitle" id="subtitle">
+            學校鐘聲太小聲？在家裡也想體驗校園生活？快來使用！
+        </p>
+    </div>
+
+    <!-- the following are the tabs that'll show up after pressing the button. -->
+    <div class="tabsContainer">
+        <div class="tabSelector">
+            <button>時鐘</button>
+            <button>設定</button>
+            <button>大考倒數</button>
+            <button>關於</button>
+        </div>
+        <div class="tab">
+            <div class="time">
+                <div id="time">
+                    <div id="time-day"></div>
+                    <div id="time-time"></div>
+                </div>
+                <div class="info">
+                    <div id="last"></div>
+                    <div id="next"></div>
+                </div>
+                <div id="progressBar">
+                    <div id="progressFill" class="HSV"></div>
+                </div>
+                <div class="next-class" id="next-class">
+                    <span id="current-class" class="next-class-item"></span>
+                    <span>➡</span>
+                    <span id="next-class-1" class="next-class-item"></span>
+                    <span>➡➡</span>
+                    <span id="next-class-2" class="next-class-item"></span>
+                </div>
+            </div>
+            <select name="timeSets" id="timeSets">
+            </select>
+            <table class="class-list"></table>
+        </div>
+        <div class="tab">
+            <div class="setting">
+                <div class="setAudio">
+                    <span>選擇音檔：</span>
+                    <input id="ain" type="file" accept="audio/mp3, audio/wav" />
+                    <br />
+                    <span id="showAudioStartPoint">起始時間：0</span>
+                    <input type="range" id="audioStartPoint" step="0.1">
+                    <br />
+                    <span id="audioLength">鐘響時長：0</span>
+                    <input type="range" id="audioLengthSet" step="0.1" min="5" max="30" value="10">
+                    <br />
+                    <span id="audioVolume">音量大小：0</span>
+                    <input type="range" id="audioVolumeSet" step="0.1" min="0" max="100" value="80">
+                    <br />
+                    <label for="fade-in"><input type="checkbox" id="fade-in" >淡入</label>
+                    <label for="fade-out"><input type="checkbox" id="fade-out" >淡出</label>
+                    <div id="zoomview-container"></div>
+                    <div id="overview-container"></div>
+                </div>
+
+                <div class="setStyle">
+                    <span>背景</span>
+                    #<input type="text" id="colorCode" onchange="document.body.style.backgroundColor = '#' + id('colorCode').value;">
+
+                </div>
+                <div class="setTime">
+                    <div>
+                        <p>設定/編輯鐘響時間</p>
+                        <button id="timeSetAdd" onclick="document.getElementById('editor').showModal()">編輯</button>
+                        <br>
+                        匯入JSON: <input id="timeSetImport" type="file">
+                    </div>
+                    <dialog id="editor" class="dialog">
+                        <button id="rm-btn" onclick="document.getElementById('editor').close()">X</button>
+                        <br>
+                        <input type="text" id="editor-name-input">.json  <span class="error-log" id="editor-name-log"></span>
+                        <br>
+                        <select name="editor" id="editor-select"></select>
+                        <button id="editor-add-btn">新增一組</button>
+                        <button id="editor-delete-btn">刪除本組</button>
+                        <div id="editor-week">
+                            <div class="editor-day" id="mon"><div class="top-row">星期一</div><button class="add-cell">+</button></div>
+                            <div class="editor-day" id="tue"><div class="top-row">星期二</div><button class="add-cell">+</button></div>
+                            <div class="editor-day" id="wed"><div class="top-row">星期三</div><button class="add-cell">+</button></div>
+                            <div class="editor-day" id="thu"><div class="top-row">星期四</div><button class="add-cell">+</button></div>
+                            <div class="editor-day" id="fri"><div class="top-row">星期五</div><button class="add-cell">+</button></div>
+                            <div class="editor-day" id="sat"><div class="top-row">星期六</div><button class="add-cell">+</button></div>
+                            <div class="editor-day" id="sun"><div class="top-row">星期日</div><button class="add-cell">+</button></div>
+                        </div>
+                        <button id="editor-save-btn">Save</button>
+                        <button id="editor-export-btn">Export To JSON File</button>
+                    </dialog>
+                </div>
+            </div>
+        </div>
+        <div class="tab">
+            <iframe id="exam-countdown" src="exam_countdown.html" frameborder="0"></iframe>
+        </div>
+        <div class="tab">
+            <div class="about">
+                <h1 id="about-title" class="about-title">關於</h1>
+                <p>發生錯誤請向以下 E-mail 回報：</p>
+                <p>11035013@fhehs.tp.edu.tw</p>
+            </div>
+        </div>
+    </div>
+    <div class="credit">迴紋針📎先生製作·2022~2023</div>
+
+</body>
+<script src="js/timepoint-selection.var.js"></script>
+<script src="js/peaks.js"></script>
+<script src="js/func.js"></script>
+<script src="js/index.js"></script>
+<script src="js/easterEgg.js"></script>
+<script src="js/tabs.js"></script>
+<script src="js/timeSet.js"></script>
+<script src="js/audio.js"></script>
+<script src="js/newEditor.js"></script>
+<script src="js/web.js"></script>
+<script> window.onload = () => {
+    navigator.userAgent.match('Electron') ? web(false) : web(true);
+    };</script>
+
+</html>
